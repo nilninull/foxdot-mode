@@ -39,6 +39,7 @@
 
 (defvar foxdot-mode-map (make-sparse-keymap))
 
+;;;###autoload
 (define-minor-mode foxdot-mode "for playing FoxDot"
   nil
   " FoxDot"
@@ -81,15 +82,15 @@
   (interactive)
   (python-shell-send-string "Clock.clear()"))
 
-(defun foxdot-evaluate-block ()
-  ""
-  (interactive)
-  )
+;; (defun foxdot-evaluate-block ()
+;;   ""
+;;   (interactive)
+;;   )
 
-(defun foxdot-evaluate-line ()
-  ""
-  (interactive)
-  )
+;; (defun foxdot-evaluate-line ()
+;;   ""
+;;   (interactive)
+;;   )
 
 (defun foxdot-stop-at ()
   "Evaluate stop() method on the under curosr object."
