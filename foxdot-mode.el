@@ -22,6 +22,12 @@
 
 ;;
 
+;; (add-hook 'foxdot-load-hook (lambda ()
+;;                               (foxdot-toggle-auto-enable 1)))
+;;
+;; (add-hook 'foxdot-preparation-hook (lambda ()
+;;                                      (sclang-eval-string "FoxDot.start")))
+
 ;;; Code:
 
 (require 'elpy)
@@ -45,6 +51,10 @@
 (define-key foxdot-mode-map "\C-c\C-q" #'foxdot-stop-current-line)
 (define-key foxdot-mode-map "\C-cQ" #'foxdot-clear-clock)
 
+(defvar foxdot-load-hook nil)
+
+(defvar foxdot-preparation-hook nil)
+
 ;;;###autoload
 (defun foxdot-start ()
   ""
@@ -55,6 +65,8 @@
         elpy-company-add-completion-from-shell t)
 
   (add-to-list 'python-shell-completion-native-disabled-interpreters "jupyter")
+
+  (run-hooks 'foxdot-preparation-hook)
 
   (with-current-buffer (get-buffer-create foxdot-scratch-buffer-name)
     (python-mode)
@@ -97,15 +109,22 @@
   (end-of-line)
   (insert "\nfrom FoxDot import *\n"))
 
-(defun foxdot-toggle-auto-enable ()
+(defun foxdot-toggle-auto-enable (&optional arg)
   ""
-  (interactive)
-  (if (memq 'foxdot-mode python-mode-hook)
-      (progn
-        (remove-hook 'python-mode-hook 'foxdot-mode)
-        (remove-hook 'inferior-python-mode 'foxdot-mode))
-    (add-hook 'python-mode-hook 'foxdot-mode)
-    (add-hook 'inferior-python-mode 'foxdot-mode)))
+  (interactive "P")
+  (message "auto foxdot mode %s"
+           (if (if arg
+                   (> 0 (prefix-numeric-value arg))
+                 (memq 'foxdot-mode python-mode-hook))
+               (progn
+                 (remove-hook 'python-mode-hook 'foxdot-mode)
+                 (remove-hook 'inferior-python-mode 'foxdot-mode)
+                 "disabled")
+             (add-hook 'python-mode-hook 'foxdot-mode)
+             (add-hook 'inferior-python-mode 'foxdot-mode)
+             "enabled")))
 
 (provide 'foxdot-mode)
+
+(run-hooks 'foxdot-load-hook)
 ;;; foxdot-mode.el ends here
