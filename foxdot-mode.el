@@ -26,7 +26,7 @@
 
 (require 'elpy)
 
-(defvar foxdot-buffer-name "*FoxDot*")
+(defconst foxdot-scratch-buffer-name "*FoxDot*")
 
 ;; (define-derived-mode foxdot-mode python-mode "FoxDot"
 ;;   "Major mode for play FoxDot")
@@ -56,13 +56,13 @@
 
   (add-to-list 'python-shell-completion-native-disabled-interpreters "jupyter")
 
-  (with-current-buffer (get-buffer-create foxdot-buffer-name)
+  (with-current-buffer (get-buffer-create foxdot-scratch-buffer-name)
     (python-mode)
     (foxdot-mode)
     (elpy-shell-get-or-create-process)
     (python-shell-send-string "from FoxDot import *")
     (insert "#! /usr/bin/env python\n\nfrom FoxDot import *\n\n")
-    (switch-to-buffer-other-window foxdot-buffer-name)))
+    (switch-to-buffer-other-window foxdot-scratch-buffer-name)))
 
 (defun foxdot-clear-clock ()
   ""
