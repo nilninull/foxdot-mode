@@ -1,6 +1,6 @@
 ;;; foxdot-mode.el --- foxdot interactive mode       -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2018  nilninull
+;; Copyright (C) 2018, 2019  nilninull
 
 ;; Author: nilninull <nilninull@gmail.com>
 ;; Keywords: languages
@@ -69,12 +69,13 @@
 
   (run-hooks 'foxdot-preparation-hook)
 
+  (setenv "PYFLAKES_BUILTINS" (shell-command-to-string "python -c 'import FoxDot; print(\",\".join(dir(FoxDot)), end=\"\")' | tail -n 1"))
+
   (with-current-buffer (get-buffer-create foxdot-scratch-buffer-name)
     (python-mode)
     (foxdot-mode)
     (elpy-shell-get-or-create-process)
     (python-shell-send-string "from FoxDot import *")
-    (insert "#! /usr/bin/env python\n\nfrom FoxDot import *\n\n")
     (switch-to-buffer-other-window foxdot-scratch-buffer-name)))
 
 (defun foxdot-clear-clock ()
